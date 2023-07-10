@@ -7,5 +7,5 @@ pp = pp_l[2]
 
 pred_df = pd.read_csv(pp+"/PredictionsComparison_"+pp+".csv")
 sns.lmplot(data=pred_df, x="Test", y="Hat")
-plt.show()
 plt.savefig(pp+"/PredictionsScatter_"+pp+".png")
+plt.show()

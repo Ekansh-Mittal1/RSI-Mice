@@ -20,9 +20,9 @@ pp_l = ["day", "night", "all"]
 pp = pp_l[1]
 
 # read data
-x_df = pd.read_csv("../Data/one_animal_training_data_" + pp + ".csv", index_col=0)
+x_df = pd.read_csv("../../Data/one_animal_training_data_" + pp + ".csv", index_col=0)
 x_df = x_df.drop(columns=['glucose', 'exp.hour', 'ee'])
-y_df = pd.read_csv("../Data/one_animal_training_data_" + pp + ".csv", usecols=['glucose'])
+y_df = pd.read_csv("../../Data/one_animal_training_data_" + pp + ".csv", usecols=['glucose'])
 
 print(x_df.head())
 print(y_df.head())
