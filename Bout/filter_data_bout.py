@@ -4,13 +4,14 @@ import numpy as np
 df = pd.read_csv("..\Data\chow_training_data_all.csv")
 
 ids = df["probe.id"].unique().tolist()
+ids = ["CGM_001"]
 filter_id_min = []
 gaps_id_min = []
 
 for id in ids:
     boutmins = df[(df["feed"] > 0.03) & (df["probe.id"] == id)]["exp.minute"].tolist()
     surroundmins = []
-
+    print(boutmins)
     for i in range(len(boutmins)):
         if boutmins[i] < 5 & boutmins[i] > 7253:
             i += 1
