@@ -1,16 +1,15 @@
-import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
 from functions import *
 
 full_data = pd.read_csv("../Data/chow_training_data_all.csv")
 thresh = 0.03
-overlays = ["none", "average", "other_days"]
-o = overlays[1]
+overlays = ["none", "average", "other_days", "other_mice"]
+o = overlays[3]
+sma = True
+window = 2
 
 ids = full_data["probe.id"].unique().tolist()
-ids = ["CGM_001"]
+# ids = ["CGM_001"]
 full_data["eating.bool"] = np.where(full_data['feed'] > thresh, True, False)
 buffer = 20
 
@@ -36,11 +35,19 @@ for id in ids:
 
     start_end_all[id] = start_end_mouse
 
+if sma:
+    full_data["feed"] = full_data["feed"].rolling(window).mean()
+    full_data["glucose"] = full_data["glucose"].rolling(window).mean()
+
 for id in ids:
+    bout_num = 1
     for bout in start_end_all[id]:
         if o == "other_days":
-            plot_other_days(full_data, bout, id, True, True)
+            plot_other_days(full_data, bout, id, False, True, bout_num)
         elif o == "none":
-            plot_bout(full_data, bout, id, True, True)
+            plot_bout(full_data, bout, id, False, True, bout_num)
         elif o == "average":
-            plot_average(full_data, bout, id)
+            plot_average(full_data, bout, id, False, True, bout_num)
+        elif o == "other_mice":
+            plot_other_mice(full_data, bout, id, False, True, bout_num)
+        bout_num += 1
