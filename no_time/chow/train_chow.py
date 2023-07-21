@@ -3,7 +3,6 @@ import pandas as pd
 from tensorflow.keras import layers
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
-from sklearn import preprocessing
 from tensorflow.keras import metrics
 from sklearn.metrics import r2_score, mean_squared_error
 import random
@@ -17,15 +16,22 @@ np.random.seed(0)
 
 
 pp_l = ["day", "night", "all"]
-pp = pp_l[2]
+pp = pp_l[0]
+buffer = 0
 
 # read data
-x_df = pd.read_csv("../../Data/chow_training_data_" + pp + ".csv", index_col=0)
-x_df = x_df.drop(columns=['glucose', 'exp.hour', 'ee', 'probe.id', 'Date.Time', 'photoperiod'])
-y_df = pd.read_csv("../../Data/chow_training_data_" + pp + ".csv", usecols=['glucose'])
-
-print(x_df.head())
-print(y_df.head())
+df = pd.read_csv("../../Data/chow_training_data_" + pp + ".csv", index_col=0)
+MAX = df["exp.minute"].max()
+if buffer != 0:
+    df["glucose"] = df["glucose"].shift(buffer).copy()
+    df = df[df["exp.minute"] < MAX+buffer-1]
+    #df.to_csv("test2.csv")
+    #df.dropna()
+    y_df = df[["glucose"]].copy()
+    x_df = df.drop(columns=['glucose', 'exp.hour', 'ee', 'probe.id', 'Date.Time', 'photoperiod', 'Date', 'Time']).copy()
+else:
+    y_df = df[["glucose"]].copy()
+    x_df = df.drop(columns=['glucose', 'exp.hour', 'ee', 'probe.id', 'Date.Time', 'photoperiod', 'Date', 'Time']).copy()
 
 x_scaler = MinMaxScaler()
 y_scaler = MinMaxScaler()
